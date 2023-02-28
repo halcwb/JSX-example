@@ -6,26 +6,28 @@ open Feliz
 open Fable.React
 open Elmish
 
-
-JsInterop.import "" "@fontsource/roboto/300.css"
-JsInterop.import "" "@fontsource/roboto/400.css"
-JsInterop.import "" "@fontsource/roboto/500.css"
-JsInterop.import "" "@fontsource/roboto/700.css"
-
-
-[<Literal>]
-let private themeDef =
-    """createTheme({
-  palette: {
-    primary: {
-        main: '#63C2C8',
-    },
-  },
-})"""
+JsInterop.importSideEffects "@fontsource/roboto/300.css"
+JsInterop.importSideEffects "@fontsource/roboto/400.css"
+JsInterop.importSideEffects "@fontsource/roboto/500.css"
+JsInterop.importSideEffects "@fontsource/roboto/700.css"
 
 [<Import("createTheme", from = "@mui/material/styles")>]
-[<Emit(themeDef)>]
-let private theme: obj = jsNative
+let createTheme (theme: obj) : obj = jsNative
+
+let theme = createTheme {|
+    palette = {| 
+        primary = {| main = "#63C2C8" |} 
+    |}
+|}
+
+
+[<Erase>]
+type Mui = 
+    [<ReactComponent(import="default", from="@mui/material/Button")>]
+    static member Button(?children: string, ?color: string, ?onClick: unit -> unit) : ReactElement = jsNative
+    
+    [<ReactComponent(import="default", from="@mui/material/Typography")>]
+    static member Typography(?children: string, ?variant: string): ReactElement = jsNative
 
 
 module private Components =
@@ -68,8 +70,6 @@ module private Components =
             $"""
             import * from 'react';
             import Box from '@mui/material/Box';
-            import Button from '@mui/material/Button';
-            import Typography from '@mui/material/Typography';
             import TextField from '@mui/material/TextField';
             import Stack from '@mui/material/Stack';
 
@@ -82,58 +82,18 @@ module private Components =
         """
 
 
-    [<JSX.Component>]
+    [<ReactComponent>]
     let Counter (props: {| title: string; dispatch : int -> unit |}) =
         let (count, setCount) = React.useState 0
 
-        JSX.jsx
-            $"""
-            import Box from '@mui/material/Box';
-            import Button from '@mui/material/Button';
-            import Typography from '@mui/material/Typography';
-            import TextField from '@mui/material/TextField';
+        React.fragment [
+            Mui.Typography(props.title, variant="h1")
+            Mui.Typography($"You clicked {count} times")
+            Mui.Button("Click me", onClick = fun _ -> setCount(count + 1))
+        ]
 
-            <React.Fragment>
-                <Typography variant="h1">{props.title}</Typography>
-                <Typography>You clicked {count} times</Typography>
-                <Button onClick={fun _ -> setCount (count + 1)}>Click me</Button>
-            </React.Fragment>
-        """
-
-
-    [<JSX.Component>]
-    let AppBar () =
-        JSX.jsx
-            $"""
-        import AppBar from '@mui/material/AppBar';
-        import Box from '@mui/material/Box';
-        import Toolbar from '@mui/material/Toolbar';
-        import Typography from '@mui/material/Typography';
-        import Button from '@mui/material/Button';
-        import IconButton from '@mui/material/IconButton';
-        import MenuIcon from '@mui/icons-material/Menu';
-
-            <Box sx={ {| flexGrow = 1 |} }>
-                <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={ {| mr = 2 |} }
-                    >
-                    <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={ {| flexGrow = 1 |} }>
-                    News
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-                </AppBar>
-            </Box>
-        """
-
+    [<ReactComponent(import="ApplicationBar", from="./ApplicationBar.jsx")>]
+    let AppBar(): ReactElement = jsNative 
 
 module private Root =
     
