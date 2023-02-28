@@ -1,0 +1,9 @@
+node_modules
+WebApp.csproj
+.js
+bin
+obj
+.fake
+.git
+packages
+paket-files

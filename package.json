@@ -1,0 +1,23 @@
+{
+  "name": "dose-intelligence",
+  "version": "1.0.0",
+  "description": "DoseIntelligence",
+  "scripts": {
+    "start": "dotnet fable -o .js -e .jsx --watch --run vite"
+  },
+  "author": "Marc Piechura",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.0.1",
+    "vite": "^4.0.4"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

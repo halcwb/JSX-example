@@ -1,0 +1,14 @@
+source https://api.nuget.org/v3/index.json
+
+nuget Fable.React.UseElmish 1.0.0-beta-001 beta
+nuget FSharp.Core
+nuget Fable.Browser.Navigator 2.3.0
+nuget Fable.Core 4.0.0-theta-007 prerelease
+nuget Feliz 2.3.0
+nuget Fable.Fetch
+nuget Fable.Elmish
+nuget Fable.Elmish.React
+nuget Fable.Elmish.Debugger
+nuget Fable.Elmish.HMR
+nuget Fable.Mocha
+nuget Fable.React
