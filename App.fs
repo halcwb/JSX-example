@@ -60,7 +60,7 @@ module private Components =
         let theme = Mui.useTheme ()
 
         let (someText, setSomeText) = React.useState props.text
-        let state, dispatch = React.useElmish(TextField.init, TextField.update props.dispatch)
+        let state, dispatch = React.useElmish(TextField.init, TextField.update props.dispatch, [| box props.dispatch |])
 
         let applySetText s =
             s |> TextField.Update |> dispatch
