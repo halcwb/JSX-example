@@ -86,10 +86,14 @@ module private Components =
     let Counter (props: {| title: string; dispatch : int -> unit |}) =
         let (count, setCount) = React.useState 0
 
+        let applyCount () =  
+            count + 1 |> setCount
+            count + 1 |> props.dispatch
+
         React.fragment [
             Mui.Typography(props.title, variant="h1")
             Mui.Typography($"You clicked {count} times")
-            Mui.Button("Click me", onClick = fun _ -> setCount(count + 1))
+            Mui.Button("Click me", onClick = fun _ -> applyCount ())
         ]
 
     [<ReactComponent(import="ApplicationBar", from="./ApplicationBar.jsx")>]
@@ -106,10 +110,13 @@ module private Root =
         { Text = ""; Count = 0 }, Cmd.none
 
     let update msg state =
-        printfn "running Root update"
         match msg with
-        | TextUpdate s -> { state with Text = s }, Cmd.none
-        | CountUpdate c -> { state with Count = c }, Cmd. none
+        | TextUpdate s -> 
+            printfn $"text update: {s}"
+            { state with Text = s }, Cmd.none
+        | CountUpdate c -> 
+            printfn $"count update: {c}"
+            { state with Count = c }, Cmd. none
 
 
 
@@ -136,13 +143,13 @@ let Root () =
                     <Box>
                     {
                         Components.Counter 
-                            {| title = "Counter"; dispatch = ignore |}
+                            {| title = "Counter"; dispatch = Root.CountUpdate >> dispatch |}
                     }
                     </Box>
                     <Box>
                     {
                         Components.TextField
-                            {| label = "Textfield"; text = "";  dispatch = ignore |}  
+                            {| label = "Textfield"; text = "";  dispatch = Root.TextUpdate >> dispatch |}  
                     }
                     </Box>
                 </Stack>
